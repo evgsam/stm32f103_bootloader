@@ -7,12 +7,19 @@
 
 #include "stm32f1xx.h"
 
+#include "usbd_cdc_core.h"
+#include "usbd_usr.h"
+#include "usb_conf.h"
+#include "usbd_desc.h"
+#include "usbd_cdc_core_loopback.h"
+
 //----------------------------------------------------------
 #define LED_ON() GPIOB->BSRR = GPIO_BSRR_BS2
 #define LED_OFF() GPIOB->BSRR = GPIO_BSRR_BR2;
 //----------------------------------------------------------
 
 __IO uint32_t tmpreg;
+extern __ALIGN_BEGIN USB_OTG_CORE_HANDLE USB_OTG_dev __ALIGN_END;
 
 void delay(unsigned int Val) {
 	for (; Val != 0; Val--) {
@@ -50,6 +57,11 @@ void RCC_DeInit(void) {
 
 int main(void) {
 	RCC_DeInit();
+
+	pvrUSBDPlusPinReset();
+	USBD_Init(&USB_OTG_dev, USB_OTG_FS_CORE_ID, &USR_desc, &USBD_CDC_cb, &USR_cb);
+
+
 	// RCC Alternate Function I/O clock enable
 	SET_BIT(RCC->APB2ENR, RCC_APB2ENR_AFIOEN);
 	tmpreg = READ_BIT(RCC->APB2ENR, RCC_APB2ENR_AFIOEN);
