@@ -2,7 +2,7 @@
  * main.c
  *
  *  Created on: 13 мар. 2024 г.
- *      Author: user
+ *      Author: evgsam
  */
 
 #include "stm32f1xx.h"
